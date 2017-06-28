@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/item_01"
+        android:icon="@mipmap/ic_launcher"
+        android:title="行列1"></item>
+
+    <item
+        android:id="@+id/item_02"
+        android:icon="@mipmap/ic_launcher"
+        android:title="行列2"></item>
+
+
+    <group android:id="@+id/group_01">
+
+    <item
+        android:id="@+id/item_03"
+        android:icon="@mipmap/ic_launcher"
+        android:title="行列3"></item>
+
+    <item
+        android:id="@+id/item_04"
+        android:icon="@mipmap/ic_launcher"
+        android:title="行列4"></item>
+
+    <item
+        android:id="@+id/item_05"
+        android:icon="@mipmap/ic_launcher"
+        android:title="行列5"></item>
+
+    </group>
+
+
+</menu>
