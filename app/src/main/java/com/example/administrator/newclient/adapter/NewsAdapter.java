@@ -64,8 +64,6 @@ public class NewsAdapter extends BaseAdapter {
         int itemViewType = getItemViewType(position);
 
         if (itemViewType==ITEM_TYPE_WITH_1_IMAGE) {
-
-
             if (convertView == null) {
                 convertView = View.inflate(context, R.layout.item_news_1, null);
             }
@@ -75,6 +73,9 @@ public class NewsAdapter extends BaseAdapter {
             TextView tvTitle = (TextView) convertView.findViewById(R.id.tv_title);
             TextView tvSource = (TextView) convertView.findViewById(R.id.tv_source);
             TextView tvComment = (TextView) convertView.findViewById(R.id.tv_comment);
+
+            //获取列表项对应的数据（javabean）
+            NewsEntity.ResultBean  news = (NewsEntity.ResultBean) getItem(position);
 
             // 显示列表item中的子控件
             tvTitle.setText(info.getTitle());
@@ -92,6 +93,10 @@ public class NewsAdapter extends BaseAdapter {
             ImageView iv01 = (ImageView) convertView.findViewById(R.id.iv_01);
             ImageView iv02 = (ImageView) convertView.findViewById(R.id.iv_02);
             ImageView iv03 = (ImageView) convertView.findViewById(R.id.iv_03);
+
+
+            // 3. 获取列表项对应的数据（javabean）
+            NewsEntity.ResultBean news = (NewsEntity.ResultBean) getItem(position);
 
             // 显示列表item中的子控件
             tvTitle.setText(info.getTitle());
@@ -127,4 +132,17 @@ public class NewsAdapter extends BaseAdapter {
     public int getViewTypeCount() {
         return 2;
     }
+
+
+    public void setDatas(List<NewsEntity.ResultBean> listDatas){
+        this.listDatas =listDatas;
+        notifyDataSetChanged();
+    }
+
+    /** 追加数据，并刷新列表显示 */
+    public void appendDatas(List<NewsEntity.ResultBean> listDatas) {
+        this.listDatas.addAll(listDatas);
+        notifyDataSetChanged();     // 刷新列表
+    }
+
 }

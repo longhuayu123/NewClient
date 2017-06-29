@@ -1,4 +1,4 @@
-package com.example.administrator.newclient.utils;
+package com.example.administrator.newclient.fragment;
 
 import android.content.Intent;
 import android.os.Handler;
@@ -41,10 +41,11 @@ public class NewsFragment extends BaseFragment {
     /*新闻列表*/
     private String channelId;
     private SpringView springView;
-    private View headerView;
     private NewsAdapter newsAdapter;
+    private int pageNo = 1;
 
-    private List<NewsEntity.ResultBean> listDates;
+    private List<NewsEntity.ResultBean> listDatas;
+    private View headerView;
 
     public void setChannelId(String channelId) {
         this.channelId = channelId;
@@ -60,15 +61,17 @@ public class NewsFragment extends BaseFragment {
         listView = (ListView) mRoot.findViewById(R.id.list_view);
         textView = (TextView) mRoot.findViewById(R.id.tv_01);
 
+        newsAdapter = new NewsAdapter(getContext(), null);
+        listView.setAdapter(newsAdapter);
 
         textView.setText("类别id:" + channelId);    // 显示新闻类别id，以作区分
-
 
         initSpringView();
     }
 
+
     private void initSpringView() {
-        final SpringView springView = (SpringView) mRoot.findViewById(R.id.spring_View);
+        springView = (SpringView) mRoot.findViewById(R.id.spring_View);
 
         // 设置SpringView头部和尾部
 
@@ -89,32 +92,17 @@ public class NewsFragment extends BaseFragment {
         springView.setListener(new SpringView.OnFreshListener() {
             @Override
             public void onRefresh() {       // 下拉，刷新第一页数据
-                showToast("下拉");
-
+               // showToast("下拉");
                 // 请求服务器第一页数据,然后刷新
-                // ...
+                getDataFromServer(true);
 
-
-
-
-
-
-
-               /* new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        // 2秒后，隐藏springView控件上拉和下拉提示
-                        springView.onFinishFreshAndLoad();
-                    }
-                }, 2000);*/
             }
 
             @Override
             public void onLoadmore() {      // 上拉，加载下一页数据
-                showToast("上拉");
-
+               // showToast("上拉");
                 // 请求服务器下一页数据
-                // ...
+                getDataFromServer(false);
 
                /* new Handler().postDelayed(new Runnable() {
                     @Override
@@ -135,7 +123,13 @@ public class NewsFragment extends BaseFragment {
                 // 用户点击的新闻
                 /*NewsEntity.ResultBean newsBean = (NewsEntity.ResultBean)
                         parent.getItemAtPosition(position);*/
-                NewsEntity.ResultBean newsBean = listDates.get(position);
+                int index = position;
+                if (listView.getHeaderViewsCount() > 0) {
+                    index = index - 1;
+                }
+
+                NewsEntity.ResultBean newsBean = listDatas.get(index);
+
                 Intent intent = new Intent(mActivity, NewsDetailActivity.class);
                 intent.putExtra("news", newsBean);
                 startActivity(intent);
@@ -146,17 +140,26 @@ public class NewsFragment extends BaseFragment {
 
     @Override
     public void initData() {
-        getDataFromServer();
+        getDataFromServer(true);
     }
 
+    /**
+     * 获取服务器新闻数据
+     *
+     * @param refresh true表示下拉刷新，false表示加载下一页数据
+     */
     // 1请求服务器获取页签详细数据
-    private void getDataFromServer() {
+    private void getDataFromServer(final boolean refresh) {
 
+        if (refresh) { // 如果是下拉刷新
+            pageNo = 1;
+        }
         // http://c.m.163.com/nc/article/headline/T1348647909107/0-20.html
-        String url = URLManager.getUrl(channelId);
+        String url = URLManager.getUrl(channelId, pageNo);
 
         HttpUtils utils = new HttpUtils();
         utils.send(HttpRequest.HttpMethod.GET, url, new RequestCallBack<String>() {
+
             //请求成功
             @Override
             public void onSuccess(ResponseInfo<String> responseInfo) {
@@ -171,10 +174,18 @@ public class NewsFragment extends BaseFragment {
                 System.out.println("----解析json:" + newsDatas.getResult().size() + "数据");
 
                 //列表显示的数据集合
-                listDates = newsDatas.getResult();
+                listDatas = newsDatas.getResult();
 
                 //3.显示列表，适配器baseadapter,显示数据到列表中
-                showDatas(listDates);
+                if (refresh) {
+                    showDatas(listDatas);
+                } else {// 上拉加载下一页数据
+                    newsAdapter.appendDatas(listDatas);
+                }
+                pageNo++;       // 页码自增1
+
+                //  隐藏SpringView的下拉和上拉显示
+                springView.onFinishFreshAndLoad();
 
             }
 
@@ -188,12 +199,19 @@ public class NewsFragment extends BaseFragment {
     }
 
     private void showDatas(List<NewsEntity.ResultBean> listDatas) {
-// （1）显示轮播图
+        // （1）显示轮播图
+
+        // 如果列表已经添加了头部布局，则先移除
+        if (listView.getHeaderViewsCount() > 0) {
+            System.out.println("----------我进来了");
+            listView.removeHeaderView(headerView);
+        }
+
         // 第一条新闻
         NewsEntity.ResultBean firstNews = listDatas.get(0);
         // 有轮播图
         if (firstNews.getAds() != null && firstNews.getAds().size() > 0) {
-            View headerView = LayoutInflater.from(getContext()).inflate(R.layout
+            headerView = LayoutInflater.from(getContext()).inflate(R.layout
                     .list_header, listView, false);
 
             // 查找轮播图控件
@@ -221,8 +239,9 @@ public class NewsFragment extends BaseFragment {
         }
 
         // （2）显示列表
-        NewsAdapter newsAdapter = new NewsAdapter(getContext(), listDatas);
-        listView.setAdapter(newsAdapter);
+        /*NewsAdapter newsAdapter = new NewsAdapter(getContext(), listDatas);
+        listView.setAdapter(newsAdapter);*/
+        newsAdapter.setDatas(listDatas);
     }
 
 
