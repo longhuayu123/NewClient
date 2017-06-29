@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 
 import com.example.administrator.newclient.R;
 import com.example.administrator.newclient.base.BaseFragment;
+import com.example.administrator.newclient.utils.NewsFragment;
 
 import java.util.ArrayList;
 import java.util.List;

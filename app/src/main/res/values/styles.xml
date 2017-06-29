@@ -17,4 +17,9 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+        <!--有标题栏的主题-->
+        <style name="NewDetailActivity" parent="AppTheme">
+            <item name="windowNoTitle">false</item>
+        </style>
+
 </resources>

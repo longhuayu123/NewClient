@@ -1,5 +1,6 @@
 package com.example.administrator.newclient.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ public class NewsEntity {
         this.result = result;
     }
 
-    public static class ResultBean {
+    public static class ResultBean implements Serializable {
         /**
          * postid : PHOT2528K000100A
          * hasCover : false
@@ -372,7 +373,7 @@ public class NewsEntity {
             this.imgextra = imgextra;
         }
 
-        public static class AdsBean {
+        public static class AdsBean implements Serializable{
             /**
              * title : 四川再发山体垮塌 1人被巨石砸中身亡
              * skipID : 00AP0001|2263315
@@ -448,7 +449,7 @@ public class NewsEntity {
             }
         }
 
-        public static class ImgextraBean {
+        public static class ImgextraBean implements Serializable{
             /**
              * imgsrc : http://cms-bucket.nosdn.127.net/dbe7eb2aa70749dca0369deb704a356b20170628134725.jpeg
              */

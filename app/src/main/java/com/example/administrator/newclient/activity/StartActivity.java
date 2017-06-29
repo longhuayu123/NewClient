@@ -5,6 +5,7 @@ import android.os.SystemClock;
 
 import com.example.administrator.newclient.R;
 import com.example.administrator.newclient.base.BaseActivity;
+import com.example.administrator.newclient.utils.SharedPrefUtil;
 
 /**
  * Created by Administrator on 2017/6/26.

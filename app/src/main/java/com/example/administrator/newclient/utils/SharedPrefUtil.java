@@ -1,4 +1,4 @@
-package com.example.administrator.newclient.activity;
+package com.example.administrator.newclient.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

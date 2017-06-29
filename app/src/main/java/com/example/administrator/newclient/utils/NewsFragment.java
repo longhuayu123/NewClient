@@ -1,14 +1,17 @@
-package com.example.administrator.newclient.fragment;
+package com.example.administrator.newclient.utils;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.example.administrator.newclient.R;
+import com.example.administrator.newclient.activity.NewsDetailActivity;
 import com.example.administrator.newclient.adapter.NewsAdapter;
 import com.example.administrator.newclient.base.BaseFragment;
 import com.example.administrator.newclient.base.URLManager;
@@ -32,10 +35,16 @@ import java.util.List;
 
 public class NewsFragment extends BaseFragment {
 
-
-    private String channelId;
     private TextView textView;
     private ListView listView;
+
+    /*新闻列表*/
+    private String channelId;
+    private SpringView springView;
+    private View headerView;
+    private NewsAdapter newsAdapter;
+
+    private List<NewsEntity.ResultBean> listDates;
 
     public void setChannelId(String channelId) {
         this.channelId = channelId;
@@ -50,6 +59,8 @@ public class NewsFragment extends BaseFragment {
     public void initView() {
         listView = (ListView) mRoot.findViewById(R.id.list_view);
         textView = (TextView) mRoot.findViewById(R.id.tv_01);
+
+
         textView.setText("类别id:" + channelId);    // 显示新闻类别id，以作区分
 
 
@@ -83,13 +94,19 @@ public class NewsFragment extends BaseFragment {
                 // 请求服务器第一页数据,然后刷新
                 // ...
 
-                new Handler().postDelayed(new Runnable() {
+
+
+
+
+
+
+               /* new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         // 2秒后，隐藏springView控件上拉和下拉提示
                         springView.onFinishFreshAndLoad();
                     }
-                }, 2000);
+                }, 2000);*/
             }
 
             @Override
@@ -99,20 +116,31 @@ public class NewsFragment extends BaseFragment {
                 // 请求服务器下一页数据
                 // ...
 
-                new Handler().postDelayed(new Runnable() {
+               /* new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         // 2秒后，隐藏springView控件上拉和下拉提示
                         springView.onFinishFreshAndLoad();
                     }
-                }, 2000);
+                }, 2000);*/
             }
         });
     }
 
     @Override
     public void initListener() {
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // 用户点击的新闻
+                /*NewsEntity.ResultBean newsBean = (NewsEntity.ResultBean)
+                        parent.getItemAtPosition(position);*/
+                NewsEntity.ResultBean newsBean = listDates.get(position);
+                Intent intent = new Intent(mActivity, NewsDetailActivity.class);
+                intent.putExtra("news", newsBean);
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -143,10 +171,11 @@ public class NewsFragment extends BaseFragment {
                 System.out.println("----解析json:" + newsDatas.getResult().size() + "数据");
 
                 //列表显示的数据集合
-                List<NewsEntity.ResultBean> listDates = newsDatas.getResult();
+                listDates = newsDatas.getResult();
 
                 //3.显示列表，适配器baseadapter,显示数据到列表中
                 showDatas(listDates);
+
             }
 
             //请求失败
