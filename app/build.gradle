@@ -38,4 +38,6 @@ dependencies {
     // 用来解析gson的库
     compile 'com.google.code.gson:gson:2.8.1'
 
+    //刷新加载
+    compile'com.liaoinstan.springview:library:1.2.6'
 }

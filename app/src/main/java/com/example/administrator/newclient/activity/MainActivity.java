@@ -100,10 +100,10 @@ public class MainActivity extends BaseActivity {
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);  // 使用toolbar代替ActionBar
 
-        toolbar.setLogo(R.drawable.selected_home_tab_04);
-        toolbar.setTitle("ToolBar");   // 通过代码设置才生效：app:title="toolbar"
+        //toolbar.setLogo(R.drawable.selected_home_tab_05);
+        toolbar.setTitle("");   // 通过代码设置才生效：app:title="toolbar"
 
-        toolbar.setSubtitle("这是子标题");
+        toolbar.setSubtitle("");
         toolbar.setTitleTextColor(Color.RED);
         toolbar.setSubtitleTextColor(Color.YELLOW);
 
